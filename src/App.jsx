@@ -1,30 +1,27 @@
 import { useState, useEffect } from "react";
 
+const TALLY_URL = "https://tally.so/r/RG4Eqj";
+
 export default function App() {
-  const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [count, setCount] = useState(0);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const target = 347;
-    const duration = 1800;
-    const step = target / (duration / 16);
-    let current = 0;
-    const timer = setInterval(() => {
-      current += step;
-      if (current >= target) { setCount(target); clearInterval(timer); }
-      else setCount(Math.floor(current));
-    }, 16);
+    // Load Tally script
+    const script = document.createElement("script");
+    script.src = "https://tally.so/widgets/embed.js";
+    script.async = true;
+    document.head.appendChild(script);
+
     const handleScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", handleScroll);
-    return () => { clearInterval(timer); window.removeEventListener("scroll", handleScroll); };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleSubmit = () => {
-    if (email && email.includes("@")) {
-      setSubmitted(true);
-      setCount(c => c + 1);
+  const openTally = () => {
+    if (window.Tally) {
+      window.Tally.openPopup("RG4Eqj", { width: 440 });
+    } else {
+      window.open(TALLY_URL, "_blank");
     }
   };
 
@@ -380,29 +377,10 @@ export default function App() {
           </p>
 
           <div id="waitlist" className="fade-up d3">
-            {!submitted ? (
-              <>
-                <div className="waitlist-form">
-                  <input
-                    className="waitlist-input"
-                    type="email"
-                    placeholder="your@email.com"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    onKeyDown={e => e.key === "Enter" && handleSubmit()}
-                  />
-                  <button className="waitlist-btn" onClick={handleSubmit}>
-                    Join waitlist →
-                  </button>
-                </div>
-                <p className="social-proof"><strong>{count}</strong> people already waiting</p>
-              </>
-            ) : (
-              <>
-                <div className="success-msg"><span>✓</span> You're on the list! We'll be in touch soon.</div>
-                <p className="social-proof">You're number <strong>{count}</strong> on the waitlist</p>
-              </>
-            )}
+            <button className="waitlist-btn" onClick={openTally} style={{ fontSize: 16, padding: "18px 36px", borderRadius: 14 }}>
+              Join the waitlist →
+            </button>
+            <p className="social-proof" style={{ marginTop: 16 }}>Free forever · Takes 10 seconds</p>
           </div>
         </div>
       </section>
@@ -483,23 +461,9 @@ export default function App() {
         <div className="cta-inner">
           <h2 className="cta-title">Ready to put<br />your <em>phone down?</em></h2>
           <p className="cta-sub">Join the waitlist and be first to know when Stil launches.</p>
-          {!submitted ? (
-            <div className="waitlist-form" style={{ maxWidth: 460, margin: "0 auto" }}>
-              <input
-                className="waitlist-input"
-                type="email"
-                placeholder="your@email.com"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && handleSubmit()}
-              />
-              <button className="waitlist-btn" onClick={handleSubmit}>Join →</button>
-            </div>
-          ) : (
-            <div className="success-msg" style={{ maxWidth: 460, margin: "0 auto" }}>
-              <span>✓</span> You're on the list!
-            </div>
-          )}
+          <button className="waitlist-btn" onClick={openTally} style={{ fontSize: 16, padding: "18px 36px", borderRadius: 14 }}>
+            Join the waitlist →
+          </button>
         </div>
       </section>
 
