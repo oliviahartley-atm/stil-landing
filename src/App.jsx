@@ -242,7 +242,13 @@ export default function App() {
       font-size: 13px; font-weight: 700; font-style: italic;
       color: var(--green-accent); margin-bottom: 20px;
     }
-    .step-icon { font-size: 40px; margin-bottom: 20px; display: block; }
+    .step-icon-wrap {
+      width: 48px; height: 48px;
+      background: var(--green-light);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
     .step-title {
       font-family: 'Playfair Display', serif;
       font-size: 22px; font-weight: 800;
@@ -256,11 +262,11 @@ export default function App() {
     .reward-card {
       background: #fff;
       border: 1px solid var(--border-soft);
-      border-radius: 24px; padding: 30px 20px;
+      border-top: 3px solid var(--green-accent);
+      border-radius: 24px; padding: 28px 20px 28px;
       text-align: center; transition: all 0.25s;
     }
-    .reward-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(26,23,16,0.08); border-color: var(--border); }
-    .reward-emoji { font-size: 36px; margin-bottom: 14px; display: block; }
+    .reward-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(26,23,16,0.08); border-color: var(--green-accent); }
     .reward-name {
       font-family: 'Playfair Display', serif;
       font-size: 17px; font-weight: 800; color: var(--ink); margin-bottom: 5px;
@@ -344,6 +350,51 @@ export default function App() {
     }
   `;
 
+  const stepData = [
+    {
+      num: "01",
+      title: "Connect Screen Time",
+      body: "Link your iPhone's built-in Screen Time in seconds. No extra tracking, no battery drain — we use what's already there.",
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--green)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="5" y="2" width="14" height="20" rx="2" />
+          <circle cx="12" cy="17" r="1" fill="var(--green)" stroke="none" />
+        </svg>
+      ),
+    },
+    {
+      num: "02",
+      title: "Build your streak",
+      body: "Stay under 3 hours a day. Every day you hit your target adds to your streak. Miss a day and it resets — simple as that.",
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--green)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+        </svg>
+      ),
+    },
+    {
+      num: "03",
+      title: "Claim your reward",
+      body: "7 days in a row and you unlock a real gift card. Choose your reward from day one so you always know what you're working toward.",
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--green)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="20 12 20 22 4 22 4 12" />
+          <rect x="2" y="7" width="20" height="5" />
+          <line x1="12" y1="22" x2="12" y2="7" />
+          <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />
+          <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
+        </svg>
+      ),
+    },
+  ];
+
+  const rewardData = [
+    { name: "Starbucks", val: "£3 gift card" },
+    { name: "Deliveroo", val: "£5 gift card" },
+    { name: "Amazon", val: "£5 gift card" },
+    { name: "ASOS", val: "£10 gift card" },
+  ];
+
   return (
     <>
       <style>{css}</style>
@@ -395,14 +446,10 @@ export default function App() {
         </div>
         <div className="section-title">Three steps.<br /><em>One good habit.</em></div>
         <div className="steps">
-          {[
-            { num: "01", icon: "📱", title: "Connect Screen Time", body: "Link your iPhone's built-in Screen Time in seconds. No extra tracking, no battery drain — we use what's already there." },
-            { num: "02", icon: "🔥", title: "Build your streak", body: "Stay under 3 hours a day. Every day you hit your target adds to your streak. Miss a day and it resets — simple as that." },
-            { num: "03", icon: "🎁", title: "Claim your reward", body: "7 days in a row and you unlock a real gift card. Choose your reward from day one so you always know what you're working toward." },
-          ].map((s, i) => (
+          {stepData.map((s, i) => (
             <div key={i} className="step">
               <div className="step-num">{s.num}</div>
-              <span className="step-icon">{s.icon}</span>
+              <div className="step-icon-wrap">{s.icon}</div>
               <div className="step-title">{s.title}</div>
               <p className="step-body">{s.body}</p>
             </div>
@@ -423,14 +470,8 @@ export default function App() {
           No points that expire. No vouchers you'll never use. Just gift cards from places you already love.
         </p>
         <div className="rewards-grid">
-          {[
-            { emoji: "☕", name: "Starbucks", val: "£3 gift card" },
-            { emoji: "🛵", name: "Deliveroo", val: "£5 gift card" },
-            { emoji: "📦", name: "Amazon", val: "£5 gift card" },
-            { emoji: "🛍️", name: "ASOS", val: "£10 gift card" },
-          ].map((r, i) => (
+          {rewardData.map((r, i) => (
             <div key={i} className="reward-card">
-              <span className="reward-emoji">{r.emoji}</span>
               <div className="reward-name">{r.name}</div>
               <div className="reward-val">{r.val}</div>
             </div>
